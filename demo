@@ -1,1 +1,4 @@
 hai hello......
+
+wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian10-x86_64-100.7.0.deb
+sudo dpkg -i mongodb-database-tools-debian10-x86_64-100.7.0.deb
