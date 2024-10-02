@@ -7,8 +7,6 @@ A simple web application to help users manage their tasks efficiently. Users can
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Features
@@ -49,6 +47,10 @@ To set up the project locally, follow these steps:
 
 After the server is running, you can access the application at `http://localhost:3000`.
 
+## Contact
+
+GitHub: felixmathew03
+
 ### Creating a Task
 
 1. Log in to your account.
@@ -56,11 +58,4 @@ After the server is running, you can access the application at `http://localhost
 3. Fill in the task details and set a due date.
 4. Click "Save" to add the task to your list.
 
-### Example API Call
 
-To create a new task via the API, you can use the following `curl` command:
-
-```bash
-curl -X POST http://localhost:3000/api/tasks \
--H "Content-Type: application/json" \
--d '{"title": "Finish project report", "dueDate": "2024-10-15"}'
