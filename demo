@@ -2,3 +2,119 @@ hai hello......
 
 wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian10-x86_64-100.7.0.deb
 sudo dpkg -i mongodb-database-tools-debian10-x86_64-100.7.0.deb
+
+npm install googleapis multer
+-------service account--------
+const { google } = require('googleapis');
+const path = require('path');
+const fs = require('fs');
+
+const SERVICE_ACCOUNT_FILE = path.join(__dirname, 'path/to/your/service-account-file.json');
+const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+
+const auth = new google.auth.GoogleAuth({
+  keyFile: SERVICE_ACCOUNT_FILE,
+  scopes: SCOPES,
+});
+-------express server--------
+const express = require('express');
+const multer = require('multer');
+const app = express();
+const upload = multer({ dest: 'uploads/' }); // Temporary storage location
+
+app.post('/upload', upload.single('image'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  try {
+    const drive = google.drive({ version: 'v3', auth });
+    const fileMetadata = {
+      name: req.file.originalname,
+      mimeType: req.file.mimetype,
+    };
+    const media = {
+      mimeType: req.file.mimetype,
+      body: fs.createReadStream(req.file.path),
+    };
+
+    const file = await drive.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: 'id',
+    });
+
+    // Clean up the uploaded file
+    fs.unlinkSync(req.file.path);
+
+    res.status(200).send(`File uploaded successfully: ${file.data.id}`);
+  } catch (error) {
+    res.status(500).send(`Error uploading file: ${error.message}`);
+  }
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+--------front end--------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Upload Image to Google Drive</h1>
+<form id="uploadForm">
+    <input type="file" id="imageInput" name="image" accept="image/*" required>
+    <button type="submit">Upload</button>
+</form>
+
+<div id="responseMessage"></div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        const formData = new FormData();
+        const fileInput = document.getElementById('imageInput');
+
+        formData.append('image', fileInput.files[0]);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.text();
+
+            document.getElementById('responseMessage').innerText = result;
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'Error uploading file: ' + error.message;
+        }
+    });
+</script>
+
+</body>
+</html>
