@@ -59,3 +59,25 @@ Note : Do this query without using $and operator.
 
 20. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which achieved a score which is not more than 10.
 	db.restaurant.find({"grades.score":{$not:{$gt:10}}})
+
+
+import React, { useRef } from 'react';
+
+function App() {
+  // Create a ref to store the DOM element
+  const inputRef = useRef(null);
+
+  const handleFocus = () => {
+    // Focus the input element when the button is clicked
+    inputRef.current.focus();
+  };
+
+  return (
+    <div>
+      <input ref={inputRef} type="text" />
+      <button onClick={handleFocus}>Focus Input</button>
+    </div>
+  );
+}
+
+export default App;
