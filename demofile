@@ -1,4 +1,7 @@
 hello
-ssh -i "express.pem" ubuntu@ec2-13-51-109-45.eu-north-1.compute.amazonaws.com
+ssh -i "express.pem" ubuntu@ec2-13-51-109-45.eu-north-1.compute.amazonaws.com(my)
 
 ssh -i "server.pem" ubuntu@ec2-34-207-213-95.compute-1.amazonaws.com
+
+
+ssh -i "instagramm.pem" ubuntu@ec2-13-60-246-92.eu-north-1.compute.amazonaws.com
